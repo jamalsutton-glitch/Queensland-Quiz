@@ -1,8 +1,0 @@
-name = "queensland-itinerary-quiz"
-main = "worker.js"
-compatibility_date = "2026-08-27"
-
-[assets]
-directory = "."
-binding = "ASSETS"
-run_worker_first = ["/api/*"]
