@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="/favicon.png">
+<title>Discover Your Queensland | First Class Holidays</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Segoe UI, Arial, sans-serif;
+  background: #101820;
+  color: white;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  background: linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.35)),
+  linear-gradient(135deg,#073b46,#155e63,#b88a43);
+  background-size: cover;
+  background-position: center;
+}
+
+.card {
+  max-width: 850px;
+  width: 100%;
+  background: rgba(0,0,0,.62);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 25px 80px rgba(0,0,0,.45);
+}
+
+.logo {
+  display: block;
+  width: min(260px, 70%);
+  max-height: 90px;
+  object-fit: contain;
+  object-position: left center;
+  margin-bottom: 24px;
+}
+
+.brand-line {
+  margin: 0 0 10px;
+  color: #d4a548;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.result-kicker {
+  color: #d4a548;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.result {
+  color: #d4a548;
+}
+
+.badge-link {
+  color: white;
+  text-decoration: none;
+  transition: transform .15s ease, background .15s ease;
+}
+
+.badge-link:hover,
+.badge-link:focus {
+  background: rgba(212,165,72,.45);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.itinerary-button {
+  display: inline-block;
+  background: #d4a548;
+  color: white;
+  text-decoration: none;
+  border-radius: 14px;
+  padding: 16px 24px;
+  font-size: 19px;
+  font-weight: bold;
+  margin-top: 14px;
+}
+
+.itinerary-button:hover,
+.itinerary-button:focus {
+  filter: brightness(1.08);
+}
+
+.secondary-button {
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.28);
+}
+
+h1 {
+  font-size: 56px;
+  margin: 0 0 15px;
+}
+
+h2 {
+  font-size: 34px;
+}
+
+p {
+  font-size: 21px;
+  line-height: 1.5;
+  color: #e8e8e8;
+}
+
+button {
+  background: #d4a548;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 16px 24px;
+  font-size: 19px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 14px;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.28);
+}
+
+.option:hover {
+  background: rgba(255,255,255,.25);
+}
+
+.did-you-know {
+  margin: 0 0 22px;
+  padding: 14px 16px;
+  background: rgba(0,0,0,.32);
+  border-left: 4px solid #d4a548;
+  border-radius: 10px;
+  color: #e3e3e3;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.did-you-know strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #d4a548;
+  font-size: 16px;
+}
+
+.progress {
+  height: 12px;
+  background: rgba(255,255,255,.2);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 25px;
+}
+
+.bar {
+  height: 100%;
+  background: #d4a548;
+}
+
+.result {
+  font-size: 46px;
+  font-weight: bold;
+  color: #d4a548;
+}
+
+.match {
+  background: rgba(255,255,255,.12);
+  padding: 18px;
+  border-radius: 16px;
+  margin: 12px 0;
+}
+
+.badge {
+  display: inline-block;
+  background: rgba(255,255,255,.16);
+  border-radius: 999px;
+  padding: 9px 14px;
+  margin: 6px;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  border-radius: 10px;
+  border: none;
+  margin: 10px 0;
+  font-size: 17px;
+}
+
+.small {
+  font-size: 15px;
+  color: #ccc;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: auto;
+  margin: 4px 0 0 0;
+  flex: 0 0 auto;
+}
+
+form button {
+  width: auto;
+}
+
+.conditional-field {
+  display: none;
+  margin-top: 6px;
+}
+
+.conditional-field.show {
+  display: block;
+}
+
+.result-actions { display:flex; flex-wrap:wrap; gap:10px; margin: 18px 0 24px; }
+.result-actions button { margin-top:0; }
+input { box-sizing:border-box; }
+@media(max-width:700px) {
+  h1 { font-size: 40px; }
+  h2 { font-size: 28px; }
+  .card { padding: 25px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+  <div class="card" id="app"></div>
+</div>
+
+<script>
+const questions = [
+ {q:"What would your clients love most about Queensland?",region:"Queensland",fact:"Queensland brings together tropical reef, ancient rainforest, sunny beaches and vibrant cities.",a:[
+ ["Seeing the biggest highlights across several regions",{explorer:5,bucket:4,road:2}],
+ ["Snorkelling the reef and exploring rainforest",{reefRainforest:5,ultimateReef:4,wildlife:2}],
+ ["Golden beaches, family fun and easy days",{family:5,sunshine:4}],
+ ["A scenic self-drive with plenty of stops",{road:5,explorer:3}]]},
+ {q:"Which Queensland experience sounds most appealing?",region:"Tropical North Queensland",fact:"Tropical North Queensland offers access to the Great Barrier Reef and Wet Tropics rainforest.",a:[
+ ["Reef cruises, tropical islands and time on the water",{ultimateReef:5,reefRainforest:4}],
+ ["Rainforest walks, wildlife and cultural experiences",{wildlife:5,reefRainforest:4}],
+ ["Theme parks, beaches and activities for all ages",{family:5,sunshine:3}],
+ ["Exploring Brisbane and discovering regional towns",{road:5,explorer:3}]]},
+ {q:"How much travelling would suit your clients?",region:"Queensland journeys",fact:"Queensland is a large state, so multi-centre trips reward thoughtful planning.",a:[
+ ["An epic trip visiting several different regions",{bucket:5,explorer:5}],
+ ["A few destinations connected by a road trip",{road:5,explorer:3}],
+ ["One relaxed coastal base with easy excursions",{sunshine:5,family:4}],
+ ["Two contrasting stops: reef and rainforest",{reefRainforest:5,ultimateReef:3}]]},
+ {q:"What kind of scenery would make the trip special?",region:"Natural wonders",fact:"From coral reefs to lush hinterland, Queensland offers strikingly different landscapes.",a:[
+ ["Coral gardens, turquoise water and islands",{ultimateReef:5,reefRainforest:3}],
+ ["Rainforest, wildlife habitats and wild landscapes",{wildlife:5,reefRainforest:4}],
+ ["Surf beaches, sunshine and a lively coastline",{sunshine:5,family:4}],
+ ["A changing mix of coast, country and city",{explorer:5,bucket:4,road:3}]]},
+ {q:"Who are your clients travelling with?",region:"Travel styles",fact:"Queensland offers experiences for families, couples and adventurous travellers alike.",a:[
+ ["Family, with something fun for everyone",{family:5,sunshine:3}],
+ ["A partner, looking for an unforgettable escape",{ultimateReef:4,reefRainforest:3,bucket:3}],
+ ["Friends who love exploring independently",{road:5,explorer:3}],
+ ["Curious travellers keen on wildlife and nature",{wildlife:5,reefRainforest:3}]]},
+ {q:"Which day sounds like their perfect holiday?",region:"Brisbane & Gold Coast",fact:"Brisbane and the Gold Coast combine city experiences, beaches and easy access to the hinterland.",a:[
+ ["Brisbane sights followed by a Gold Coast sunset",{sunshine:5,road:3}],
+ ["A beach day with family-friendly attractions",{family:5,sunshine:3}],
+ ["A boat trip to the reef and a tropical island",{ultimateReef:5,reefRainforest:4}],
+ ["A scenic drive, local stops and new discoveries",{road:5,explorer:4}]]},
+ {q:"How adventurous are your clients feeling?",region:"Discover more",fact:"Queensland can be explored at an easy pace or as a bigger, multi-region adventure.",a:[
+ ["All in: the iconic once-in-a-lifetime highlights",{bucket:5,explorer:4}],
+ ["Nature-led: wildlife, rainforest and discovery",{wildlife:5,reefRainforest:4}],
+ ["Relaxed: sunshine, beaches and comfortable stays",{sunshine:5,family:3}],
+ ["Freedom: open roads and flexible sightseeing",{road:5,explorer:3}]]},
+ {q:"What should the holiday deliver above all?",region:"Your Queensland match",fact:"Your result combines your answers into a suggested itinerary style, with two alternatives to explore.",a:[
+ ["The fullest possible Queensland experience",{bucket:6,explorer:5}],
+ ["An immersive reef and rainforest adventure",{reefRainforest:6,ultimateReef:4}],
+ ["Beautiful beaches and effortless good times",{sunshine:6,family:5}],
+ ["Unique wildlife, wild places and real discovery",{wildlife:6,road:3}]]}
+];
+
+const destinations = {
+ explorer:{name:"The Great Queensland Explorer",title:"A multi-centre journey through Queensland's standout cities, coastlines and natural wonders.",route:[{label:"Brisbane"},{label:"Tropical North Queensland"},{label:"Regional Queensland"}],itineraryUrl:""},
+ reefRainforest:{name:"The Reef & Rainforest Adventurer",title:"Dive into Tropical North Queensland, combining Great Barrier Reef experiences with lush rainforest.",route:[{label:"Cairns"},{label:"Port Douglas"},{label:"Great Barrier Reef"},{label:"Rainforest"}],itineraryUrl:""},
+ family:{name:"The Beach & Family Escape",title:"A Gold Coast holiday built around beaches, family adventures and memorable days together.",route:[{label:"Gold Coast"},{label:"Beaches"},{label:"Family activities"}],itineraryUrl:""},
+ road:{name:"The Queensland Road Tripper",title:"Explore at your own pace from Brisbane and the Gold Coast into regional Queensland.",route:[{label:"Brisbane"},{label:"Gold Coast"},{label:"Regional Queensland"}],itineraryUrl:""},
+ ultimateReef:{name:"The Ultimate Reef Escape",title:"An island-and-reef-focused escape with time to discover Tropical North Queensland's marine wonders.",route:[{label:"Tropical North Queensland"},{label:"Great Barrier Reef"},{label:"Islands"}],itineraryUrl:""},
+ sunshine:{name:"The Sunshine Seeker",title:"Sun-filled days linking the Gold Coast and Brisbane, with beaches, city experiences and easy exploring.",route:[{label:"Gold Coast"},{label:"Brisbane"},{label:"Coastal experiences"}],itineraryUrl:""},
+ wildlife:{name:"The Wildlife & Nature Lover",title:"A nature-rich escape through Tropical North Queensland and beyond, full of rainforest and wildlife experiences.",route:[{label:"Tropical North Queensland"},{label:"Rainforest"},{label:"Wider Queensland"}],itineraryUrl:""},
+ bucket:{name:"The Big Queensland Bucket List",title:"The ultimate multi-region Queensland adventure, combining major highlights into one remarkable journey.",route:[{label:"Multi-region Queensland"},{label:"Coast"},{label:"Reef"},{label:"Nature"}],itineraryUrl:""}
+};
+
+let current = 0;
+let scores = {};
+let answers = [];
+
+function resetScores() {
+  Object.keys(destinations).forEach(d => scores[d] = 0);
+}
+
+
+function setBackground(imageUrl) {
+  document.querySelector(".app").style.backgroundImage =
+    `linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.18)), url("${imageUrl}")`;
+}
+
+function renderRouteItem(item) {
+  if (item.url) {
+    return `<a class="badge badge-link" href="${item.url}" target="_blank" rel="noopener noreferrer">${item.label}</a>`;
+  }
+  return `<span class="badge">${item.label}</span>`;
+}
+
+function landing() {
+  setBackground("images/question-1.jpg");
+
+  document.getElementById("app").innerHTML = `
+    <img class="logo" src="https://i.ibb.co/nsJjwDmq/First-Class-Holidays-WHITE.png" alt="First Class Holidays">
+    <h1>Discover Queensland. Find Your Adventure.</h1>
+    <p>Answer a few quick questions and we'll recommend the perfect Queensland holiday, tailored to your travel style.</p>
+    <button onclick="start()">Start Queensland Quiz</button>
+  `;
+}
+
+function start() {
+  current = 0;
+  resetScores();
+  answers = [];
+  showQuestion();
+}
+
+function showQuestion() {
+  setBackground(`images/question-${current + 1}.jpg`);
+  const q = questions[current];
+  const progress = (current / questions.length) * 100;
+
+  document.getElementById("app").innerHTML = `
+    <div class="progress"><div class="bar" style="width:${progress}%"></div></div>
+    <p>Question ${current + 1} of ${questions.length}</p>
+    <h2>${q.q}</h2>
+    <div class="did-you-know">
+      <strong>${q.region}</strong>
+      Did you know? ${q.fact}
+    </div>
+    ${q.a.map((ans, i) => `<button class="option" onclick="choose(${i})">${ans[0]}</button>`).join("")}
+  `;
+}
+
+function choose(i) {
+  const points = questions[current].a[i][1];
+  answers[current] = questions[current].a[i][0];
+
+  Object.keys(points).forEach(dest => {
+    scores[dest] += points[dest];
+  });
+
+  current++;
+
+  if (current >= questions.length) {
+    leadForm();
+  } else {
+    showQuestion();
+  }
+}
+
+function showResults() {
+  setBackground("images/question-8.jpg");
+  const ranked = Object.keys(scores)
+    .sort((a,b) => scores[b] - scores[a])
+    .slice(0,3);
+
+  const topResult = destinations[ranked[0]];
+  document.querySelector(".app").style.backgroundImage="linear-gradient(135deg,#073b46,#155e63,#b88a43)";
+
+  document.getElementById("app").innerHTML = `
+    <img class="logo" src="https://i.ibb.co/nsJjwDmq/First-Class-Holidays-WHITE.png" alt="First Class Holidays">
+    <p class="result-kicker">Discover Queensland. Find Your Adventure.</p>
+    <div class="result">${topResult.name}</div>
+    <p>${topResult.title}</p>
+
+    <div class="result-actions"><button class="secondary-button" onclick="start()">Retake Quiz</button></div>
+    <p class="small">Your top itinerary match and two other options to explore:</p>
+    ${ranked.map((key, index) => `
+      <div class="match">
+        <h2>${index + 1}. ${destinations[key].name}</h2>
+        <p>${destinations[key].title}</p>
+        ${destinations[key].route.map(renderRouteItem).join("")}
+        ${destinations[key].itineraryUrl ? `
+          <br>
+          <a class="itinerary-button" href="${destinations[key].itineraryUrl}" target="_blank" rel="noopener noreferrer">
+            View Priced Itinerary
+          </a>
+        ` : ""}
+      </div>
+    `).join("")}
+
+  `;
+}
+
+function leadForm() {
+  setBackground("images/question-8.jpg");
+  document.getElementById("app").innerHTML = `
+    <img class="logo" src="https://i.ibb.co/nsJjwDmq/First-Class-Holidays-WHITE.png" alt="First Class Holidays">
+    <h1>Your Queensland adventure awaits!</h1>
+    <p>We have found your ideal Queensland escape. Complete the form below to reveal your personalised itinerary and two alternatives.</p>
+
+    <form id="lead-form" name="queensland-quiz-leads" onsubmit="submitLead(event)">
+      <input type="hidden" name="quiz_result" value="${destinations[Object.keys(scores).sort((a,b) => scores[b] - scores[a])[0]].name}">
+
+      <input name="first_name" placeholder="First name" required>
+      <input name="email" type="email" placeholder="Email address" required>
+      <input name="phone" type="tel" placeholder="Phone number" required>
+
+      <label class="small checkbox-row">
+        <input type="checkbox" name="consent" value="yes">
+        <span>I agree to receive Queensland travel inspiration, newsletters and marketing emails.</span>
+      </label>
+
+      <label class="small checkbox-row">
+        <input type="checkbox" id="travel-professional" name="travel_professional" value="yes" onchange="toggleAbtaField()">
+        <span>Are you a travel professional?</span>
+      </label>
+
+      <div id="abta-field" class="conditional-field">
+        <input id="abta-number" name="abta_number" placeholder="ABTA number">
+      </div>
+
+      <button type="submit">Reveal My Queensland Adventure</button>
+      <div id="form-status" class="small" style="margin-top:12px;"></div>
+    </form>
+
+    <button class="secondary-button" onclick="start()">Retake Quiz</button>
+  `;
+}
+
+function toggleAbtaField() {
+  const checkbox = document.getElementById("travel-professional");
+  const wrapper = document.getElementById("abta-field");
+  const input = document.getElementById("abta-number");
+
+  if (!checkbox || !wrapper || !input) return;
+
+  const isTravelProfessional = checkbox.checked;
+  wrapper.classList.toggle("show", isTravelProfessional);
+  input.required = isTravelProfessional;
+
+  if (!isTravelProfessional) {
+    input.value = "";
+  }
+}
+
+async function submitLead(event) {
+  event.preventDefault();
+
+  const form = event.target;
+  const submitButton = form.querySelector('button[type="submit"]');
+  const status = document.getElementById("form-status");
+  const formData = new FormData(form);
+
+  const leadData = {
+    first_name: formData.get("first_name"),
+    email: formData.get("email"),
+    phone: formData.get("phone"),
+    quiz_result: formData.get("quiz_result"),
+    consent: formData.get("consent") || "no",
+    travel_professional: formData.get("travel_professional") || "no",
+    abta_number: formData.get("abta_number") || "",
+
+    q1: answers[0] || "",
+    q2: answers[1] || "",
+    q3: answers[2] || "",
+    q4: answers[3] || "",
+    q5: answers[4] || "",
+    q6: answers[5] || "",
+    q7: answers[6] || "",
+    q8: answers[7] || ""
+  };
+
+  submitButton.disabled = true;
+  submitButton.textContent = "Sending...";
+  status.textContent = "";
+
+  try {
+    // Send to secure Cloudflare Worker endpoint, which then talks to Mailchimp
+    const response = await fetch("/api/mailchimp-signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(leadData)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || "Mailchimp signup failed");
+    }
+
+    showResults();
+  } catch (error) {
+    console.error(error);
+    status.innerHTML = "Something went wrong. Please try again.";
+    submitButton.disabled = false;
+    submitButton.textContent = "Reveal My Queensland Adventure";
+  }
+}
+
+function thanks() {
+  document.getElementById("app").innerHTML = `
+    <img class="logo" src="https://i.ibb.co/nsJjwDmq/First-Class-Holidays-WHITE.png" alt="First Class Holidays">
+    <h1>Thank You</h1>
+    <p>Your Queensland itinerary recommendation has been received.</p>
+    <p class="small">Thank you for your interest in Queensland.</p>
+    <button onclick="start()">Try Again</button>
+  `;
+}
+
+landing();
+</script>
+</body>
+</html>
